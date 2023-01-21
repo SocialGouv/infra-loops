@@ -1,0 +1,50 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    app: infra-loops
+  name: infra-loops-job
+  {{ if ne .Release.Namespace "default" }}
+  namespace: "{{ .Release.Namespace }}"
+  {{ end }}
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "{{ .Values.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+        spec:
+          volumes:
+            - name: config-volume
+              configMap:
+                name: {{ or .Values.component .Chart.Name }}-config
+            {{ range $secret := .Values.mountSecrets }}
+            - name: secret-{{ $secret.name }}
+              secret:
+                secretName: {{ $secret.name }}
+            {{ end }}
+          containers:
+            - name: run-loop
+              image: {{ .Values.image }}
+              imagePullPolicy: Always
+              args: ["play"]
+              volumeMounts:
+                - name: config-volume
+                  mountPath: /app/.infra-loops/config.yaml
+                  subPath: config.yaml
+                {{ range $secret := .Values.mountSecrets }}
+                - name: secret-{{ $secret.name }}
+                  mountPath: /secrets/{{ $secret.name }}
+                {{ end }}
+              env:
+                - name: IAL_HOMEDIR
+                  value: /app/.infra-loops
+              resources:
+                limits:
+                  cpu: {{ .Values.resources.limits.cpu }}
+                  memory: {{ .Values.resources.limits.memory }}
+                requests:
+                  cpu: {{ .Values.resources.requests.cpu }}
+                  memory: {{ .Values.resources.requests.memory }}
+          restartPolicy: Never

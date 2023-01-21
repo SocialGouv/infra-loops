@@ -1,0 +1,13 @@
+import infra-as-loop
+required:
+- create rancher project
+- create ns ci
+- 
+- add secrets
+  sentry ks in ns *-ci
+  notify mattermost ks in ns *-ci
+
+- re-run quickly on new repo
+- aggregate kubeconfig
+- random tokens
+- instances de db: (preprod + prod) x multi

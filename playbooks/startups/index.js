@@ -19,14 +19,14 @@ module.exports = playbookFactory(async () => {
     })
 
     const iterator = ctx.require("iterator")
-
-    await iterator.mapOf(
+    await iterator.mapOfSeries(
       startupsList,
       async (startup) => {
-        const { name, rancherProjectName } = startup
+        const { name, rancherProjectName = name } = startup
         await plays.rancherProject({
-          projectName: rancherProjectName || name,
+          projectName: rancherProjectName,
         })
+        // return false
       },
       "startups-list"
     )

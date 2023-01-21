@@ -12,7 +12,7 @@
     "dotenv": "^16.0.3",
     "enquirer": "^2.3.6",
     "form-data": "^4.0.0",
-    "foundernetes": "^1.0.5",
+    "foundernetes": "^1.1.3",
     "fs-extra": "^10.1.0",
     "js-yaml": "^4.1.0",
     "link-module-alias": "^1.2.0",
@@ -28,6 +28,7 @@
     "sonic-boom": "^3.2.0",
     "tiged": "^2.12.3",
     "which": "^3.0.0",
+    "ya-retry": "^1.2.0",
     "yaml": "^2.1.3",
     "zx": "^7.1.1"
   },
@@ -65,15 +66,12 @@
     "postinstall": "[ -d '.husky' ] && husky install || true && link-module-alias",
     "precommit": "lint-staged",
     "dev:docs": "docsify serve docs",
-    "docker:build": "DOCKER_BUILDKIT=1 docker build -f Dockerfile -t infra-fabrique .",
-    "docker:run": "docker run -it -v $PWD:/workspace infra-fabrique",
+    "docker:build": "DOCKER_BUILDKIT=1 docker build --progress=plain -f Dockerfile -t infra-loops .",
+    "docker:run": "docker run -it infra-loops",
     "docker": "yarn docker:build && yarn docker:run"
   },
   "_moduleAliases": {
     "~": "."
   },
-  "packageManager": "yarn@3.3.0",
-  "resolutions": {
-    "foundernetes": "portal:/lab/devthejo/foundernetes"
-  }
+  "packageManager": "yarn@3.3.0"
 }

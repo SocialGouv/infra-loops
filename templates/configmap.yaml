@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    component: {{ or .Values.component .Chart.Name }}
+  name: {{ or .Values.component .Chart.Name }}-config
+  {{ if ne .Release.Namespace "default" }}
+  namespace: "{{ .Release.Namespace }}"
+  {{ end }}
+data:
+  config.yaml: {{ tpl .Values.config . | quote }}

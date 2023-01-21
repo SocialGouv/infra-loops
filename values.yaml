@@ -1,0 +1,17 @@
+schedule: "0 0 * * *" # every day at 00:00
+createNamespace: true
+image: ghcr.io/socialgouv/infra-loop:latest
+mountSecrets:
+  - name: kubeconfig
+  - name: github
+resources:
+  limits:
+    cpu: "2"
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+component: 
+config: |
+  foo: bar
+  
